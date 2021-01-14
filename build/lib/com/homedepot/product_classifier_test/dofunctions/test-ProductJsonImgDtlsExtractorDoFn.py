@@ -1,0 +1,58 @@
+import pytest
+from com.homedepot.product_classifier_test.dofunctions.do_functions_to_test import *
+import json
+## By testing below, ProductImageJsonTransformations covered implicitly
+class TestProductJsonImgDtlsExtractorDoFn():
+    def test_process(self):
+        test_json = {"itemId": "100000001",
+                     "imageUrl": ["https://images.homedepot-static.com/productImages/02e7d98c-5f38-4472-9162-b2ca874cfbef/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_65.jpg",
+                                  "https://images.homedepot-static.com/productImages/02e7d98c-5f38-4472-9162-b2ca874cfbef/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_100.jpg",
+                                  "https://images.homedepot-static.com/productImages/02e7d98c-5f38-4472-9162-b2ca874cfbef/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_300.jpg",
+                                  "https://images.homedepot-static.com/productImages/02e7d98c-5f38-4472-9162-b2ca874cfbef/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_400.jpg",
+                                  "https://images.homedepot-static.com/productImages/02e7d98c-5f38-4472-9162-b2ca874cfbef/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_600.jpg",
+                                  "https://images.homedepot-static.com/productImages/02e7d98c-5f38-4472-9162-b2ca874cfbef/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_1000.jpg",
+                                  "https://images.homedepot-static.com/productImages/421be4e1-9be2-4024-83f9-c21a54da2511/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_65.jpg",
+                                  "https://images.homedepot-static.com/productImages/421be4e1-9be2-4024-83f9-c21a54da2511/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_100.jpg",
+                                  "https://images.homedepot-static.com/productImages/421be4e1-9be2-4024-83f9-c21a54da2511/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_300.jpg",
+                                  "https://images.homedepot-static.com/productImages/421be4e1-9be2-4024-83f9-c21a54da2511/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_400.jpg",
+                                  "https://images.homedepot-static.com/productImages/421be4e1-9be2-4024-83f9-c21a54da2511/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_600.jpg",
+                                  "https://images.homedepot-static.com/productImages/421be4e1-9be2-4024-83f9-c21a54da2511/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_1000.jpg",
+                                  "https://images.homedepot-static.com/productImages/756de539-5555-4485-9b68-cc448fc95aed/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_65.jpg",
+                                  "https://images.homedepot-static.com/productImages/756de539-5555-4485-9b68-cc448fc95aed/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_100.jpg",
+                                  "https://images.homedepot-static.com/productImages/756de539-5555-4485-9b68-cc448fc95aed/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_300.jpg",
+                                  "https://images.homedepot-static.com/productImages/756de539-5555-4485-9b68-cc448fc95aed/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_400.jpg",
+                                  "https://images.homedepot-static.com/productImages/756de539-5555-4485-9b68-cc448fc95aed/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_600.jpg",
+                                  "https://images.homedepot-static.com/productImages/756de539-5555-4485-9b68-cc448fc95aed/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_1000.jpg",
+                                  "https://images.homedepot-static.com/productImages/70a7d748-6499-4d04-9b62-e178506b23d0/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_65.jpg",
+                                  "https://images.homedepot-static.com/productImages/70a7d748-6499-4d04-9b62-e178506b23d0/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_100.jpg",
+                                  "https://images.homedepot-static.com/productImages/70a7d748-6499-4d04-9b62-e178506b23d0/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_300.jpg",
+                                  "https://images.homedepot-static.com/productImages/70a7d748-6499-4d04-9b62-e178506b23d0/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_400.jpg",
+                                  "https://images.homedepot-static.com/productImages/70a7d748-6499-4d04-9b62-e178506b23d0/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_600.jpg",
+                                  "https://images.homedepot-static.com/productImages/70a7d748-6499-4d04-9b62-e178506b23d0/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_1000.jpg",
+                                  "https://images.homedepot-static.com/productImages/80e42666-ffda-4279-bd59-d183010e2917/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_65.jpg",
+                                  "https://images.homedepot-static.com/productImages/80e42666-ffda-4279-bd59-d183010e2917/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_100.jpg",
+                                  "https://images.homedepot-static.com/productImages/80e42666-ffda-4279-bd59-d183010e2917/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_300.jpg",
+                                  "https://images.homedepot-static.com/productImages/80e42666-ffda-4279-bd59-d183010e2917/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_400.jpg",
+                                  "https://images.homedepot-static.com/productImages/80e42666-ffda-4279-bd59-d183010e2917/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_600.jpg",
+                                  "https://images.homedepot-static.com/productImages/80e42666-ffda-4279-bd59-d183010e2917/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_1000.jpg",
+                                  "https://images.homedepot-static.com/productImages/f36c3cd5-21ab-47a0-a27d-b962946ce9de/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_65.jpg",
+                                  "https://images.homedepot-static.com/productImages/f36c3cd5-21ab-47a0-a27d-b962946ce9de/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_100.jpg",
+                                  "https://images.homedepot-static.com/productImages/f36c3cd5-21ab-47a0-a27d-b962946ce9de/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_300.jpg",
+                                  "https://images.homedepot-static.com/productImages/f36c3cd5-21ab-47a0-a27d-b962946ce9de/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_400.jpg",
+                                  "https://images.homedepot-static.com/productImages/f36c3cd5-21ab-47a0-a27d-b962946ce9de/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_600.jpg",
+                                "https://images.homedepot-static.com/productImages/f36c3cd5-21ab-47a0-a27d-b962946ce9de/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_1000.jpg"]}
+        input_json = json.dumps(test_json)
+        expected_output = [('100000001',
+                          [{'image_url': 'https://images.homedepot-static.com/productImages/02e7d98c-5f38-4472-9162-b2ca874cfbef/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_1000.jpg',
+                            'image_id': '02e7d98c-5f38-4472-9162-b2ca874cfbef'},
+                           {'image_url': 'https://images.homedepot-static.com/productImages/421be4e1-9be2-4024-83f9-c21a54da2511/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_1000.jpg',
+                            'image_id': '421be4e1-9be2-4024-83f9-c21a54da2511'},
+                           {'image_url': 'https://images.homedepot-static.com/productImages/756de539-5555-4485-9b68-cc448fc95aed/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_1000.jpg',
+                            'image_id': '756de539-5555-4485-9b68-cc448fc95aed'},
+                           {'image_url': 'https://images.homedepot-static.com/productImages/70a7d748-6499-4d04-9b62-e178506b23d0/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_1000.jpg',
+                            'image_id': '70a7d748-6499-4d04-9b62-e178506b23d0'},
+                           {'image_url': 'https://images.homedepot-static.com/productImages/80e42666-ffda-4279-bd59-d183010e2917/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_1000.jpg',
+                            'image_id': '80e42666-ffda-4279-bd59-d183010e2917'},
+                           {'image_url': 'https://images.homedepot-static.com/productImages/f36c3cd5-21ab-47a0-a27d-b962946ce9de/svn/grey-innovative-textile-solutions-slipcovers-9050chaigrey-64_1000.jpg',
+                            'image_id': 'f36c3cd5-21ab-47a0-a27d-b962946ce9de'}])]
+        assert ProductJsonImgDtlsExtractorDoFn.process("dada",input_json) == expected_output
